@@ -164,7 +164,7 @@ public class ShoppingService {
         Set<String> productIds = new HashSet<>();// Set para garantir que não haja duplicatas
         productIds.add(productId);
 
-        if (cartOpened != null) {// Se o carrinho já existir (não for null), adiciona os ids dos produtos existentes no carrinho
+        if (cartOpened != null) {// If the cart already exists (is not null), adds the IDs of the existing products in the cart
             List<String> cartProductIds = cartOpened.productOrders()
                     .stream()
                     .map(ProductOrderResponseDto::productId)
@@ -173,16 +173,16 @@ public class ShoppingService {
             productIds.addAll(cartProductIds);
         }
 
-        List<String> uniqueProductIds = new ArrayList<>(productIds);// Converte o Set de volta para uma lista (sem duplicatas)
+        List<String> uniqueProductIds = new ArrayList<>(productIds);// Converts the Set back to a List (without duplicates)
 
         List<ProductDetailDto> products = mockyApiService.getProductsByIds(uniqueProductIds);// Busca todos os produtos únicos no mockyApi
 
-        List<ProductDetailDto> productsWithDiscount = products.stream()// Filtra os produtos com promoções
+        List<ProductDetailDto> productsWithDiscount = products.stream()// Filter products with promotions
                 .filter(product -> product.promotions() != null && !product.promotions().isEmpty())
                 .collect(Collectors.toList());
 
         int totalDiscount = 0;
-        for (ProductDetailDto productWithDiscount : productsWithDiscount) {// Chama a função discountAvailable para cada produto com promoções
+        for (ProductDetailDto productWithDiscount : productsWithDiscount) {// Calls the discountAvailable function for each product with promotions
             totalDiscount += discountAvailable(cartOpened, productWithDiscount, quantity, productId);
         }
 

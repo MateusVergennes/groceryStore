@@ -113,7 +113,7 @@ public class OrdersService {
             Orders existingOrder = orderOptional.get();
             List<ProductOrder> existingProductOrders = existingOrder.getProductOrders();
 
-            // Verifica se o produto já está na lista de ProductOrders da ordem
+            // Checks if the product is already in the order's ProductOrders list
             ProductOrder existingProductOrder = existingProductOrders.stream()
                     .filter(po -> po.getProductId().equals(productOrderDto.productId()))
                     .findFirst()

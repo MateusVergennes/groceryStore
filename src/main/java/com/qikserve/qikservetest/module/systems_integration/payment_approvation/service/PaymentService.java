@@ -25,22 +25,21 @@ public class PaymentService {
     private String getPaymentStatus(int value) {
         RestTemplate restTemplate = new RestTemplate();
 
-        // Configurando headers
+        // Configuring headers
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
 
-        // Adicionando Authorization no formato Base64
+        // adding Authorization in Base64 format
         String encodedToken = Base64.getEncoder().encodeToString(("Bearer " + paymentToken).getBytes(StandardCharsets.UTF_8));
         headers.set("Authorization", encodedToken);
 
-        // Criando o corpo da requisição
+        // Creating the request body
         String requestBody = "{\"amount\":" + value + "}";
 
-        // Realizando a chamada POST
         HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
         ResponseEntity<PaymentResponseDto> response = restTemplate.exchange(paymentUrl, HttpMethod.POST, entity, PaymentResponseDto.class);
 
-        // Retornando o status do pagamento
+        // Returning payment status
         return response.getBody() != null ? response.getBody().statusPayment() : null;
     }
 

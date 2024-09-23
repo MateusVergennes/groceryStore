@@ -26,7 +26,7 @@ public class TaxDiscountValueService {
     private String taxUrl;
 
     @Transactional
-    @Scheduled(cron = "0 0 0 * * *") // Executa todos os dias à meia-noite
+    @Scheduled(cron = "0 0 0 * * *") // Runs every day at midnight
     public void takeDiscountValuesOfTax() {
         RestTemplate restTemplate = new RestTemplate();
 
@@ -34,18 +34,18 @@ public class TaxDiscountValueService {
         List<Tax> taxes = taxRepository.findAll();
 
         for (Tax tax : taxes) {
-            // Configura o cabeçalho
+            // Set the header
             HttpHeaders headers = new HttpHeaders();
             headers.set("CategoryOfTax", tax.getName());
 
-            // Cria a entidade de requisição
+            // Creates the request entity
             HttpEntity<String> entity = new HttpEntity<>(headers);
 
-            // Faz a requisição para a API Mocky
+            // Makes the request to the Mocky API
             TaxResponseDto response = restTemplate.exchange(taxUrl, HttpMethod.GET, entity, TaxResponseDto.class).getBody();
 
             if (response != null) {
-                // Atualiza o discountPercentage da taxa
+                //Update the discount percentage of the rate
                 tax.setDiscountPercentage(response.discountPercentage());
                 taxRepository.save(tax); // Atualiza a taxa no banco
             }
